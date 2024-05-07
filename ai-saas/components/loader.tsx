@@ -10,5 +10,5 @@ export const Loader = () => {
                 Stars are aligning...
             </p>
         </div>
-    );
+    ); 
 };
