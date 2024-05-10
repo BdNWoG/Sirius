@@ -6,8 +6,8 @@ interface useProModalStore {
     onClose: () => void;
 };
 
-export const useProModalStore = create<useProModalStore>((set) => ({
-    isOpen: true,
+export const useProModal = create<useProModalStore>((set) => ({
+    isOpen: false,
     onOpen: () => set({ isOpen: true }),
     onClose: () => set({ isOpen: false }),
 }));
