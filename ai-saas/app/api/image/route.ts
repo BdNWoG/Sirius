@@ -7,6 +7,8 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY 
 });
 
+import { checkAPILimit, increaseAPILimit } from "@/lib/api-limit";
+
 export async function POST(
     req: Request
 ){
@@ -31,9 +33,17 @@ export async function POST(
             return new NextResponse("No resolution  provided", { status: 400 });
         }
 
+        const freeTrial = await checkAPILimit();
+
+        if (!freeTrial) {
+            return new NextResponse("Sorry, you have exceeded the free trial limit. Please upgrade your plan.", { status: 403 });
+        }
+
         const response = await openai.images.generate({   
             prompt, n: parseInt(amount, 10), size: resolution
         });
+
+        await increaseAPILimit();
 
         return NextResponse.json(response.data);
     } 

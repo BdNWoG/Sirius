@@ -6,6 +6,8 @@ const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN!
 });
 
+import { checkAPILimit, increaseAPILimit } from "@/lib/api-limit";
+
 export async function POST(
     req: Request
 ){
@@ -22,6 +24,12 @@ export async function POST(
             return new NextResponse("No prompt provided", { status: 400 });
         }
 
+        const freeTrial = await checkAPILimit();
+
+        if (!freeTrial) {
+            return new NextResponse("Sorry, you have exceeded the free trial limit. Please upgrade your plan.", { status: 403 });
+        }
+
         const response = await replicate.run(
             "anotherjesse/zeroscope-v2-xl:9f747673945c62801b13b84701c783929c0ee784e4748ec062204894dda1a351", 
             { 
@@ -30,6 +38,8 @@ export async function POST(
                 }
             }
         );
+
+        await increaseAPILimit();
 
         return NextResponse.json(response);
     } 

@@ -9,6 +9,8 @@ const openai = new OpenAI({
 
 const { ChatCompletionRequestMessage } = require("openai");
 
+import { checkAPILimit, increaseAPILimit } from "@/lib/api-limit";
+
 const instructionMessage: typeof ChatCompletionRequestMessage = {
     role: "system",
     content: "You are a code generator. You must answer only in markdown code snippets. Use code comments for explanations."
@@ -30,10 +32,18 @@ export async function POST(
             return new NextResponse("No messages provided", { status: 400 });
         }
 
+        const freeTrial = await checkAPILimit();
+
+        if (!freeTrial) {
+            return new NextResponse("Sorry, you have exceeded the free trial limit. Please upgrade your plan.", { status: 403 });
+        }
+
         const response = await openai.chat.completions.create({   
             model: "gpt-3.5-turbo",
             messages: [instructionMessage,...messages]
         });
+
+        await increaseAPILimit();
 
         return NextResponse.json(response.choices[0].message);
     } 
