@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon } from "lucide-react";
+import { FreeCounter } from "./free-counter";
 
 const montserrat = Montserrat({weight:"600", subsets:["latin"]});
 
@@ -54,7 +55,13 @@ const Routes = [
     },
 ];
 
-const Sidebar = () => {
+interface SidebarProps {
+    APILimitCount: number;
+}
+
+const Sidebar = ({
+    APILimitCount = 0
+}: SidebarProps) => {
     const pathname = usePathname();
     return (
         <div className="space-y-4 py-4 flex flex-col h-full bg-[#111827] text-white">
@@ -80,6 +87,9 @@ const Sidebar = () => {
                     ))}
                 </div>
             </div>
+            <FreeCounter APILimitCount={APILimitCount}
+
+            />
         </div>
     );
 };
