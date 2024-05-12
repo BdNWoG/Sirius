@@ -9,7 +9,7 @@ const settingsUrl = absoluteUrl("/settings");
 
 export async function GET() {
     try {
-        const { userId } = await auth();
+        const { userId } = auth();
         const user = await currentUser();
 
         if (!user || !userId) {
@@ -18,7 +18,7 @@ export async function GET() {
         
         const userSubscription = await prismadb.userSubscription.findUnique({
             where: {
-                userId
+                userId: userId,
             }
         });
 
@@ -56,7 +56,7 @@ export async function GET() {
             ],
             metadata: {
                 userId,
-            }
+            },
         });
 
         return new NextResponse(JSON.stringify({ url: stripeSession.url }));
