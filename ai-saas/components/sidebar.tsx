@@ -57,10 +57,12 @@ const Routes = [
 
 interface SidebarProps {
     APILimitCount: number;
+    isPro: boolean;
 }
 
 const Sidebar = ({
-    APILimitCount = 0
+    APILimitCount = 0,
+    isPro = false
 }: SidebarProps) => {
     const pathname = usePathname();
     return (
@@ -87,9 +89,7 @@ const Sidebar = ({
                     ))}
                 </div>
             </div>
-            <FreeCounter APILimitCount={APILimitCount}
-
-            />
+            <FreeCounter APILimitCount={APILimitCount} isPro={isPro}/>
         </div>
     );
 };

@@ -11,10 +11,12 @@ import { useProModal } from "@/hooks/use-pro-modal";
 
 interface FreeCounterProps {
     APILimitCount: number
+    isPro: boolean 
 }
 
 export const FreeCounter = ({
-    APILimitCount = 0
+    APILimitCount = 0,
+    isPro = false
 }: FreeCounterProps) => {
     const proModal = useProModal();
 
@@ -28,6 +30,10 @@ export const FreeCounter = ({
         return null;
     }
 
+    if (isPro) {
+        return null;
+    }
+    
     return (
         <div className="px-3">
             <Card className="bg-black/10 border-0">

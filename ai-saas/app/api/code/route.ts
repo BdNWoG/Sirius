@@ -10,6 +10,7 @@ const openai = new OpenAI({
 const { ChatCompletionRequestMessage } = require("openai");
 
 import { checkAPILimit, increaseAPILimit } from "@/lib/api-limit";
+import { checkSubscription } from "@/lib/subscription";
 
 const instructionMessage: typeof ChatCompletionRequestMessage = {
     role: "system",
@@ -33,8 +34,9 @@ export async function POST(
         }
 
         const freeTrial = await checkAPILimit();
+        const isPro = await checkSubscription();
 
-        if (!freeTrial) {
+        if (!freeTrial && !isPro) {
             return new NextResponse("Sorry, you have exceeded the free trial limit. Please upgrade your plan.", { status: 403 });
         }
 
@@ -43,7 +45,9 @@ export async function POST(
             messages: [instructionMessage,...messages]
         });
 
-        await increaseAPILimit();
+        if (!isPro){
+            await increaseAPILimit();
+        }
 
         return NextResponse.json(response.choices[0].message);
     } 
