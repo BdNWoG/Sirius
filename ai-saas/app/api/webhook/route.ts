@@ -10,7 +10,6 @@ export async function POST(req: Request) {
     const signature = headers().get("Stripe-Signature") as string;
 
     let event: Stripe.Event; 
-
     
     try{
         event = stripe.webhooks.constructEvent(
@@ -33,7 +32,6 @@ export async function POST(req: Request) {
         if (!session?.metadata?.userId) {
             return new NextResponse("User ID is required", { status: 400 });
         } 
-
         await prismadb.userSubscription.create({
             data: {
                 userId: session?.metadata?.userId,

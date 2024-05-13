@@ -18,7 +18,7 @@ export async function GET() {
         
         const userSubscription = await prismadb.userSubscription.findUnique({
             where: {
-                userId: userId,
+                userId,
             }
         });
 
