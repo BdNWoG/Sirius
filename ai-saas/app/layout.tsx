@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Sirius",
   description: "AI platform",
   icons: {
-    icon: '/favicon.ico',
+    icon: "/favicon.ico",
   },
 };
 
